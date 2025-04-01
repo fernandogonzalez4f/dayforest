@@ -1,0 +1,12 @@
+{% extends 'shopApp/base.html' %}
+{% block content %}
+
+<h1 class="text-center" style="padding: 10px;">Añadir Contacto</h1>
+
+    <form method="POST" style="padding: 10px;" >
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Guardar</button>
+    </form>
+
+{% endblock %}

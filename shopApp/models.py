@@ -24,9 +24,9 @@ class HistoricalCost(models.Model):
     
 class Contact(models.Model):
     contact_full_name = models.CharField(max_length=100, unique=True)
-    contact_address = models.CharField(max_length=100)
+    contact_address = models.CharField(max_length=150)
     contact_phone = models.CharField(max_length=20)
-    contact_email = models.CharField(max_length=100, unique=True)
+    contact_email = models.EmailField(max_length=30)
     contact_active = models.BooleanField()
 
     def __str__(self):

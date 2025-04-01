@@ -1,14 +1,14 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.templatetags.static import static
 from shopApp.models import Product, Contact
+from shopApp.forms import FormComment, ContactForm
 
 # Create your views here.
 def index(request):
     product_list = Product.objects.all()
     special_offers = Product.objects.filter(product_is_offer=True)
     my_context = {
-        'user' : 'Fer',
         'message' : '¿Qué tal?',
         'special_offers' : special_offers,
         'product_list' : product_list,
@@ -63,12 +63,34 @@ def index(request):
     #return HttpResponse("Hola mundo desde Django")
 
 def about(request):
-    return render(request, 'shopApp/about.html')  
+    contact_list = Contact.objects.filter(contact_active=True).order_by("contact_full_name")
+    return render(request, 'shopApp/about.html', context={'contacts' : contact_list})
 
-def about(request):
-    #Muestra los contactos activos
-    active_contacts = Contact.objects.filter(contact_active=True)
-    context = {
-        'active_contacts': active_contacts
-    }
-    return render(request, 'shopApp/about.html', context=context)  
+def form_comment(request):
+    form = FormComment()
+
+    if request.method == 'POST':
+        form = FormComment(request.POST)
+        if form.is_valid():
+            print('Formulario valido')
+            print('Nombre: ', form.cleaned_data['full_name'])
+            print('Email: ', form.cleaned_data['email'])
+            print('Comentario: ', form.cleaned_data['comment'])
+    return render(request, 'shopApp/form_comment.html', context={'form' : form})
+
+def add_contact(request):
+    form = ContactForm()
+
+    if request.method == 'POST':
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            Contact.objects.create(
+                contact_full_name=form.cleaned_data['contact_full_name'],
+                contact_address=form.cleaned_data['contact_address'],
+                contact_phone=form.cleaned_data['contact_phone'],
+                contact_email=form.cleaned_data['contact_email'],
+                contact_active=form.cleaned_data['contact_active']
+            )
+            return redirect('about')
+
+    return render(request, 'shopApp/add_contact.html', context={'form': form})

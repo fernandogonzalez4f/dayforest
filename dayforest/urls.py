@@ -16,9 +16,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from shopApp.views import index
+from shopApp.views import about
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('shopapp/', include('shopApp.urls')),
-    path('',index)
+    path('',index),
+    path('api/', include('api.urls')),
+    path('accounts/', include('django.contrib.auth.urls')),
 ]

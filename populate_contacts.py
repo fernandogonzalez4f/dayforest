@@ -17,7 +17,7 @@ def populate_contacts(n_contacts = 10):
         fake_address = fake_generator.address()
         fake_phone = fake_generator.phone_number()
         fake_email = fake_generator.email()
-        fake_active = random.choice([True, False])
+        fake_active = random.random() > 0.5
         
         contact = Contact.objects.get_or_create(
             contact_full_name = fake_full_name,
